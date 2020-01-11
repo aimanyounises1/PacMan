@@ -4,6 +4,7 @@ import java.awt.List;
 import java.util.ArrayList;
 
 import Server.game_service;
+import dataStructure.DGraph;
 import dataStructure.graph;
 import utils.Point3D;
 
@@ -14,7 +15,7 @@ import java.util.Iterator;
 
 
 public class MyGameGui {
-	graph g;
+   DGraph g;
 	ArrayList<Fruit>Fruits=new ArrayList<Fruit>();
 	ArrayList<Robot>Robots=new ArrayList<Robot>();
 	
@@ -22,9 +23,14 @@ public class MyGameGui {
 		this.g=null;
 	}
 	
-	public MyGameGui(graph g)
-	{
-	this.g=g;
+	public MyGameGui(game_service s)
+	{this.g=new DGraph();
+	
+	   g.init(s.getGraph());
+	   initRobots(s);
+	   initFruits(s);
+	   
+	   
 	}
 	
 	public void initRobots(game_service s)
