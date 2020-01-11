@@ -95,7 +95,7 @@ public class MyGameGui {
 					int type=perot.getInt("type");
 					double value=perot.getDouble("value");
 					Fruit fr=new Fruit(value,type,new Point3D(x,y,z));
-					
+					i++;
 
 					
 					
