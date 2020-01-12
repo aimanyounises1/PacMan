@@ -31,6 +31,29 @@ public class Robot {
 		this.sum=sum;
 		this.location=p;
 	}
+	public int getsrc()
+	{
+		return src;
+	}
+	public int getdest()
+	{
+		return dst;
+		
+	}
+	public double getvalue()
+	{
+		return sum;
+	}
+	public Point3D getlocation()
+	{
+		return location;
+		
+	}
+	public String toString() {
+		
+	
+	return "Robot:{id:"+this.key+",value:"+this.sum+",src:"+this.src+",des:"+this.dst+",pos:"+this.location+"}";
+	}
 	
 
 }

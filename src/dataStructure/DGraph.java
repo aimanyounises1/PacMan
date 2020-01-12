@@ -47,7 +47,7 @@ public class DGraph implements graph,Serializable {
 		try
 		{
 			JSONObject graph= new JSONObject(g);
-			JSONArray nodes= new JSONArray("Nodes");
+			JSONArray nodes= graph.getJSONArray("Nodes");
 			int i=0;
 			while(i<nodes.length())
 			{
@@ -76,13 +76,13 @@ public class DGraph implements graph,Serializable {
 		{
 			JSONObject graph= new JSONObject(g);
 
-			JSONArray edges= new JSONArray("Edges");
+			JSONArray edges= graph.getJSONArray("Edges");
 			int j=0;
 			while(j<edges.length())
 			{
 				JSONObject edg=edges.getJSONObject(j);
 				int source=edg.getInt("src");
-				int dest=edg.getInt("dst");
+				int dest=edg.getInt("dest");
 				double weight=edg.getDouble("w");
 				this.connect(source, dest, weight);
 				j++;

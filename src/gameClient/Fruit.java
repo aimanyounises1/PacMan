@@ -8,8 +8,7 @@ public class Fruit {
 	
 	double value;
 	Point3D p;
-	enum e{apple,banana};
-	e name;
+	int type;
 	
 	public Fruit()
 	{
@@ -20,12 +19,24 @@ public class Fruit {
 	{
 		this.value=vlue;
 		this.p=p;
-		if(x==-1)
-			this.name=e.banana;
-		if(x==1)
-			this.name=e.apple;
-		else
-			name=null;
+		this.type=x;
+	}
+	public int gettype()
+	{
+		return this.type;
+	}
+	
+	public double getvalue() {
+		return this.value;
+	}
+	public Point3D getlocation()
+	{
+		return this.p;
+	}
+	
+	public String toString()
+	{
+		return "Fruit:{"+"value:"+this.value+",type:"+this.type+",pos:"+this.p+"}";
 	}
 	
 	
