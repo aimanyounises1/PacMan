@@ -77,10 +77,14 @@ public class MyGameGUI extends Thread {
             StdDraw.show();
             this.server.startGame();
             kml = new KML_Logger();
-			kml.init(server, s);;
-            this.start();
-            kml.start();
+			kml.init(server, s);
+			// first of all convert dgraph to kml
+			kml.StartKml();
+           this.start();
 			
+            // starts putting the date and the coordinates of each robots and fruits
+            kml.run();
+            kml.Save();
         }
     }
     public void FruitsGui(){

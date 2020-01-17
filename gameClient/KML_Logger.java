@@ -1,6 +1,7 @@
 package gameClient;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -22,6 +23,9 @@ public class KML_Logger extends Thread {
 	game_service game;
 	FruitsAlgo fruits;
 	private String num;
+	FileWriter fileWriter;
+	BufferedWriter bufferedWriter;
+	
 	public KML_Logger() {
 		ro = new ArrayList<Robots>();
 		f = new ArrayList<Fruits>();
@@ -35,18 +39,70 @@ public class KML_Logger extends Thread {
 		ro =  new RobotsAlgo(this.game).robots;
 		graph.init(game.getGraph());
 		this.num = s;
+		num = num+".kml";
+		try {
+			this.fileWriter = new FileWriter(this.num);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		this.bufferedWriter = new BufferedWriter(this.fileWriter);
 		this.game.startGame();
-		//System.out.println("Iam in");
+	}
+	public void StartKml() {
+		try {
+		this.fileWriter = new FileWriter(this.num);
+		this.bufferedWriter = new BufferedWriter(this.fileWriter);
+		this.bufferedWriter.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" + 
+				"<kml xmlns=\"http://www.opengis.net/kml/2.2\">\n" + 
+				"  <Document>\n" + 
+				"    <name>Points with TimeStamps</name>\n" + 
+				"    <Style id=\"paddle-a\">\n" + 
+				"      <IconStyle>\n" + 
+				"        <Icon>\n" + 
+				"          <href>http://maps.google.com/mapfiles/kml/paddle/A.png</href>\n" + 
+				"        </Icon>\n" + 
+				"        <hotSpot x=\"32\" y=\"1\" xunits=\"pixels\" yunits=\"pixels\"/>\n" + 
+				"      </IconStyle>\n" + 
+				"    </Style>\n" + 
+				"    <Style id=\"paddle-b\">\n" + 
+				"      <IconStyle>\n" + 
+				"        <Icon>\n" + 
+				"          <href>http://maps.google.com/mapfiles/kml/paddle/B.png</href>\n" + 
+				"        </Icon>\n" + 
+				"        <hotSpot x=\"32\" y=\"1\" xunits=\"pixels\" yunits=\"pixels\"/>\n" + 
+				"      </IconStyle>\n" + 
+				"    </Style>\n" + 
+				"    <Style id=\"hiker-icon\">\n" + 
+				"      <IconStyle>\n" + 
+				"        <Icon>\n" + 
+				"          <href>http://maps.google.com/mapfiles/ms/icons/hiker.png</href>\n" + 
+				"        </Icon>\n" + 
+				"        <hotSpot x=\"0\" y=\".5\" xunits=\"fraction\" yunits=\"fraction\"/>\n" + 
+				"      </IconStyle>\n" + 
+				"    </Style>\n" + 
+				"    <Style id=\"check-hide-children\">\n" + 
+				"      <ListStyle>\n" + 
+				"        <listItemType>checkHideChildren</listItemType>\n" + 
+				"      </ListStyle>\n" + 
+				"    </Style>\n" + 
+				"    <styleUrl>#check-hide-children</styleUrl>\n<Folder>\n");
+		this.bufferedWriter.write(this.PlaceTheGraph());
+		}catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+		
 	}
 	public String PlaceTheGraph() {
 		String s= "";
 		for (node_data data :this.graph.getV() ) {
-		 s+=	"<Placemark>"+
-	    "<description>"+"</description>"+
-	    "<Point>"+
-	      "<coordinates>"+data.getLocation().x() +","+data.getLocation().y()+","+data.getLocation().z()+"</coordinates>"+
-	    "</Point>"+
-	  "</Placemark>";
+		 s+=	"<Placemark>\n"+
+	    "<description>"+"Node num"+data.getKey()+"</description>\n"+
+	    "<Point>\n"+
+	      "<coordinates>"+data.getLocation().x() +","+data.getLocation().y()+","+data.getLocation().z()+"</coordinates>\n"+
+	    "</Point>\n"+
+	  "</Placemark>\n";
 	}
 		return s;
 	}
@@ -98,64 +154,32 @@ public class KML_Logger extends Thread {
 						"        </Point>\n" + 
 						"      </Placemark>\n";
 			}
-    return s;	
+    		return s;	
     }
-    public void run() {
-    	String FileName = num+".kml";
-    	try {
-    		// Assume default encoding.
-    	FileWriter fileWriter =new FileWriter(FileName);//write the file 
-    	BufferedWriter bufferedWriter =new BufferedWriter(fileWriter);
-    	bufferedWriter.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" + 
-				"<kml xmlns=\"http://www.opengis.net/kml/2.2\">\n" + 
-				"  <Document>\n" + 
-				"    <name>Points with TimeStamps</name>\n" + 
-				"    <Style id=\"paddle-a\">\n" + 
-				"      <IconStyle>\n" + 
-				"        <Icon>\n" + 
-				"          <href>http://maps.google.com/mapfiles/kml/paddle/A.png</href>\n" + 
-				"        </Icon>\n" + 
-				"        <hotSpot x=\"32\" y=\"1\" xunits=\"pixels\" yunits=\"pixels\"/>\n" + 
-				"      </IconStyle>\n" + 
-				"    </Style>\n" + 
-				"    <Style id=\"paddle-b\">\n" + 
-				"      <IconStyle>\n" + 
-				"        <Icon>\n" + 
-				"          <href>http://maps.google.com/mapfiles/kml/paddle/B.png</href>\n" + 
-				"        </Icon>\n" + 
-				"        <hotSpot x=\"32\" y=\"1\" xunits=\"pixels\" yunits=\"pixels\"/>\n" + 
-				"      </IconStyle>\n" + 
-				"    </Style>\n" + 
-				"    <Style id=\"hiker-icon\">\n" + 
-				"      <IconStyle>\n" + 
-				"        <Icon>\n" + 
-				"          <href>http://maps.google.com/mapfiles/ms/icons/hiker.png</href>\n" + 
-				"        </Icon>\n" + 
-				"        <hotSpot x=\"0\" y=\".5\" xunits=\"fraction\" yunits=\"fraction\"/>\n" + 
-				"      </IconStyle>\n" + 
-				"    </Style>\n" + 
-				"    <Style id=\"check-hide-children\">\n" + 
-				"      <ListStyle>\n" + 
-				"        <listItemType>checkHideChildren</listItemType>\n" + 
-				"      </ListStyle>\n" + 
-				"    </Style>\n" + 
-				"    <styleUrl>#check-hide-children</styleUrl>\n<Folder>\n"); 
-    		bufferedWriter.write(this.PlaceTheGraph());
+    	public void run() {
     		while(this.game.isRunning()) {
-    		bufferedWriter.write(this.PlaceMarkFruit());
-    		bufferedWriter.write(this.PLaceMarkRobots());
-    		}
-    		bufferedWriter.write("   </Folder>\n");
-    		bufferedWriter.write("\n" + 
-				"  </Document>\n" + 
-				"</kml>");
-    	bufferedWriter.close();
+    		try {
+       		this.bufferedWriter.write(this.PlaceMarkFruit());
+    		this.bufferedWriter.write(this.PLaceMarkRobots());
+    		
     	System.out.println("Saved"); 
     	}catch (Exception e) {
-	// TODO: handle exception
-    		System.out.println(e);
+    		e.printStackTrace();
     	}
+    		}
    }
+    	public void Save() {
+    		try {
+    		this.bufferedWriter.write("   </Folder>\n");
+    		this.bufferedWriter.write("\n" + 
+				"  </Document>\n" + 
+				"</kml>");
+    	this.bufferedWriter.close();
+    		}catch (Exception e) {
+				// TODO: handle exception
+    			e.printStackTrace();
+			}
+    	}
     public static void main(String[] args) {
     	 MyGameGUI m =new MyGameGUI();
             
