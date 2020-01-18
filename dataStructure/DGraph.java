@@ -71,7 +71,7 @@ public class DGraph implements graph, Serializable {
 	 */
 	@Override
 	public void connect(int src, int dest, double w) {
-		edge_data temp = new EdgeData(src, dest, w);
+		edge_data temp = new Edge(src, dest, w);
 		if (this.getNode(src) != null && this.getNode(dest) != null) {
 			if (this.getEdge(src,dest)==null) {
 				if (this.edges.get(src)== null) {
@@ -200,7 +200,7 @@ public class DGraph implements graph, Serializable {
 				s = Jnodes.getJSONObject(i).getInt("id");
 				String pos = Jnodes.getJSONObject(i).getString("pos");
 				Point3D p = new Point3D(pos);
-				this.addNode(new NodeData(s, p));
+				this.addNode(new Node(s, p));
 			}
 			for(i = 0; i < Jedges.length(); ++i) {
 				s = Jedges.getJSONObject(i).getInt("src");
