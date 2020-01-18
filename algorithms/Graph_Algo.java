@@ -125,7 +125,7 @@ public class Graph_Algo implements graph_algorithms, Serializable {
 					edge_data e = (edge_data) it1.next();
 					if (e.getTag() == 0) {
 						if (d.getEdge(e.getDest(), e.getSrc()) != null) {
-							EdgeData temps = new EdgeData((EdgeData) d.getEdge(e.getSrc(), e.getDest()));
+							Edge temps = new Edge((Edge) d.getEdge(e.getSrc(), e.getDest()));
 							double tempWeight1 = d.getEdge(e.getSrc(), e.getDest()).getWeight();
 							double tempWeight2 = d.getEdge(e.getDest(), e.getSrc()).getWeight();
 							d.connect(e.getSrc(), e.getDest(), tempWeight2);
@@ -312,14 +312,14 @@ public class Graph_Algo implements graph_algorithms, Serializable {
 	public graph copy() {
 		graph ans = new DGraph();
 		for (node_data n : this.algo.getV()) {
-			node_data temp = new NodeData((NodeData) n);
+			node_data temp = new Node((Node) n);
 			ans.addNode(temp);
 		}
 		for (node_data n : ans.getV()) {
 			Collection<edge_data> coll = this.algo.getE(n.getKey());
 			if(coll!=null) {
 				for (edge_data e : this.algo.getE(n.getKey())) {
-					edge_data temp = new EdgeData((EdgeData) e);
+					edge_data temp = new Edge((Edge) e);
 					ans.connect(temp.getSrc(), temp.getDest(), temp.getWeight());
 				}
 			}

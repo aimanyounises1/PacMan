@@ -11,23 +11,23 @@ import java.util.List;
 
 public class FruitsAlgo {
 
-    public List<Fruit> fruit ;
+    public List<Fruits> fruits ;
     private int size;
     private game_service num;
 
      public FruitsAlgo() {
-        this.fruit = new LinkedList<>();
-        this.size = fruit.size();
+        this.fruits = new LinkedList<>();
+        this.size = fruits.size();
         this.num = null;
     }
-     public List<Fruit> FruitList(List<String> temp) {
+     public List<Fruits> FruitList(List<String> temp) {
          for (String f : temp) {
-             Fruit fr = new Fruit();
-             fr = (Fruit) fr.init(f);
-             this.fruit.add(fr);
+             Fruits fr = new Fruits();
+             fr = (Fruits) fr.init(f);
+             this.fruits.add(fr);
          }
-         this.size = this.fruit.size();
-         return this.fruit;
+         this.size = this.fruits.size();
+         return this.fruits;
      }
     public int getSizeFruits() {
         int CountFruits = 0;
@@ -46,8 +46,8 @@ public class FruitsAlgo {
     public FruitsAlgo(game_service numGame) {
         this.num = numGame;
         this.size = this.getSizeFruits();
-        this.fruit = new LinkedList<>();
-        this.fruit = FruitList(this.num.getFruits());
+        this.fruits = new LinkedList<>();
+        this.fruits = FruitList(this.num.getFruits());
     }
 
    
