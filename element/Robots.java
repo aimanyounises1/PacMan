@@ -1,90 +1,50 @@
 package element;
 
+import Server.game_service;
 import org.json.JSONException;
 import org.json.JSONObject;
-import utils.Point3D;
 
-public class Robots  {
-    private int src;
-    private int dest;
-    private int id;
-    private Point3D pos;
-    private int speed;
-    private double value;
-    private String pic;
-    public Robots(){
-        this.src = 0;
-        this.dest = 0;
-        this.id = 0;
-        this.pos = null;
-        this.speed = 0;
-        this.value = 0;
-        this.pic = "robot.png";
+import java.util.LinkedList;
+import java.util.List;
+
+public class Robots {
+
+    public List<Robot> robot ;
+    private int amountRobots;
+    private game_service numGame;
+
+    public Robots(game_service numGame) {
+        this.numGame = numGame;
+        this.amountRobots = getAmountRobots();
+        this.robot = new LinkedList<>();
+        this.robot = listR(this.numGame.getRobots());
+        //System.out.println("this.numGame.getRobots" + this.numGame.getRobots()); /////////////////
     }
 
-    public Robots init(String json) {
-        Robots temp = new Robots();
+    public List<Robot> listR(List<String> temp) {
+        List<Robot> tempR = new LinkedList<>();
+        for (String r : temp) {
+            //System.out.println("the line of the robot" + r); ////////////////
+            Robot ro = new Robot();
+            ro = (Robot) ro.init(r);
+            tempR.add(ro);
+        }
+        this.robot = tempR;
+        this.amountRobots = this.robot.size();
+        return this.robot;
+    }
+
+    public int getAmountRobots() {
+        int amount = 0;
         try {
-            JSONObject robot = new JSONObject(json);
-            JSONObject robott = robot.getJSONObject("Robot");
-            temp.src = robott.getInt("src");
-            temp.dest = robott.getInt("dest");
-            temp.value = robott.getDouble("value");
-            temp.id = robott.getInt("id");
-            String pos = robott.getString("pos");
-            temp.pos = new Point3D(pos);
-            temp.speed = robott.getInt("speed");
+            String gameString = this.numGame.toString();
+            JSONObject gameJson = new JSONObject(gameString);
+            JSONObject gameServer = gameJson.getJSONObject("GameServer");
+            amount = gameServer.getInt("robots");
         }
         catch (JSONException e) {
             e.printStackTrace();
         }
-        return temp;
+        return amount;
     }
-
- 
-    public int getId() {
-        return this.id;    }
-
-    public Point3D getLocation() {
-        return this.pos;
-    }
-
-    public void setLocation(Point3D p) {
-        this.pos = p;
-
-    }
-
-    public int getSrc(){
-        return this.src;
-    }
-
-    public void setSrc(int s){
-        this.src = s;
-    }
-
-    public int getDest(){
-        return this.dest;
-    }
-
-    public void setDest(int d){
-        this.dest = d;
-    }
-
-    public int getSpeed(){
-        return this.speed;
-    }
-
-    public void setSpeed(int sp){
-        this.speed=sp;
-    }
-
-    public double getValue(){
-        return this.value;
-    }
-
-    public void setValue(double v){
-        this.value = v;
-    }
-
-
 }

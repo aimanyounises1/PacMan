@@ -2,9 +2,9 @@ package algorithms;
 
 import Server.game_service;
 import dataStructure.*;
-import element.Fruits;
+import element.Fruit;
 import element.FruitsAlgo;
-import element.Robots;
+import element.Robot;
 import element.RobotsAlgo;
 import utils.Point3D;
 
@@ -30,8 +30,8 @@ public class Game_Algo {
         this.numOfRobot = robots.RobotSize();
     }
 
-    public edge_data getEdge(Fruits fruit) {
-        edge_data ans = new Edge();
+    public edge_data getEdge(Fruit fruit) {
+        edge_data ans = new EdgeData();
         for (node_data n : this.GraphGame.getV()) {
             if (this.GraphGame.getE(n.getKey()) != null) {
                 Iterator<edge_data> it = this.GraphGame.getE(n.getKey()).iterator();
@@ -65,7 +65,7 @@ public class Game_Algo {
         List<edge_data> edgeOfFruit = new LinkedList<>();
         System.out.println("this.server: " + this.server.toString());
         this.fruits = new FruitsAlgo(this.server);
-        for (Fruits f : this.fruits.fruits) {
+        for (Fruit f : this.fruits.fruit) {
             edgeOfFruit.add(getEdge(f));
         }
         return edgeOfFruit;
@@ -75,7 +75,7 @@ public class Game_Algo {
         List<edge_data> edgeOfFruit = getListOfEdgeF();
         for (int i = 0; i < this.numOfRobot; i++) {
             double min = Integer.MAX_VALUE;
-            edge_data ans = new Edge();
+            edge_data ans = new EdgeData();
             for (edge_data e : edgeOfFruit) {
                 if (e.getWeight() < min) {
                     min = e.getWeight();
@@ -87,11 +87,11 @@ public class Game_Algo {
         }
     }
 
-    public void nextNode(Robots r, DGraph graphGame) {
+    public void nextNode(Robot r, DGraph graphGame) {
         Graph_Algo g = new Graph_Algo();
         g.init(graphGame);
         List<edge_data> edgeOfFruit = getListOfEdgeF();
-        edge_data minDest = new Edge();
+        edge_data minDest = new EdgeData();
         double min = Integer.MAX_VALUE;
         for (edge_data e : edgeOfFruit) {
             double temp = g.shortestPathDist(r.getSrc(), e.getSrc());
