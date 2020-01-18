@@ -5,7 +5,7 @@ import Server.game_service;
 import algorithms.Game_Algo;
 import algorithms.Graph_Algo;
 import dataStructure.DGraph;
-import dataStructure.Node;
+import dataStructure.NodeData;
 import dataStructure.edge_data;
 import dataStructure.graph;
 import dataStructure.node_data;
@@ -13,7 +13,6 @@ import element.Fruits;
 import element.FruitsAlgo;
 import element.Robots;
 import element.RobotsAlgo;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 import utils.Point3D;
@@ -79,10 +78,13 @@ public class MyGameGUI extends Thread {
             this.server.startGame();
             kml = new KML_Logger();
 			kml.init(server, s);
-			kml.start();
-            this.start();
-            
+			// first of all convert dgraph to kml
+			kml.StartKml();
+           this.start();
 			
+            // starts putting the date and the coordinates of each robots and fruits
+            kml.run();
+            kml.Save();
         }
     }
     public void FruitsGui(){
@@ -189,7 +191,7 @@ public class MyGameGUI extends Thread {
             if ((x < nX + 0.0004) && (x > nX - 0.0004))
                 if ((y < nY + 0.0004) && (y > nY - 0.0004)){
                     Point3D ansP = new Point3D(nX, nY, 0);
-                    node_data ans = new Node(ansP);
+                    node_data ans = new NodeData(ansP);
                     this.r = n;
                     return ans;
                 }

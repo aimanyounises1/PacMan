@@ -31,7 +31,7 @@ public class Game_Algo {
     }
 
     public edge_data getEdge(Fruits fruit) {
-        edge_data ans = new Edge();
+        edge_data ans = new EdgeData();
         for (node_data n : this.GraphGame.getV()) {
             if (this.GraphGame.getE(n.getKey()) != null) {
                 Iterator<edge_data> it = this.GraphGame.getE(n.getKey()).iterator();
@@ -75,7 +75,7 @@ public class Game_Algo {
         List<edge_data> edgeOfFruit = getListOfEdgeF();
         for (int i = 0; i < this.numOfRobot; i++) {
             double min = Integer.MAX_VALUE;
-            edge_data ans = new Edge();
+            edge_data ans = new EdgeData();
             for (edge_data e : edgeOfFruit) {
                 if (e.getWeight() < min) {
                     min = e.getWeight();
@@ -91,7 +91,7 @@ public class Game_Algo {
         Graph_Algo g = new Graph_Algo();
         g.init(graphGame);
         List<edge_data> edgeOfFruit = getListOfEdgeF();
-        edge_data minDest = new Edge();
+        edge_data minDest = new EdgeData();
         double min = Integer.MAX_VALUE;
         for (edge_data e : edgeOfFruit) {
             double temp = g.shortestPathDist(r.getSrc(), e.getSrc());
@@ -112,4 +112,3 @@ public class Game_Algo {
         }
     }
 }
-
