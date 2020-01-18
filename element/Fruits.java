@@ -3,7 +3,6 @@ package element;
 import Server.Game_Server;
 import Server.game_service;
 //import com.google.gson.annotations.JsonAdapter;
-import dataStructure.Edge;
 import dataStructure.edge_data;
 import org.json.JSONException;
 import org.json.JSONObject;

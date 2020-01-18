@@ -8,31 +8,31 @@ import Server.Game_Server;
 import Server.game_service;
 import dataStructure.DGraph;
 import dataStructure.node_data;
-import element.Fruit;
+import element.Fruits;
 import element.FruitsAlgo;
-import element.Robot;
+import element.Robots;
 import element.RobotsAlgo;
 import utils.Point3D;
 public class KML_Logger extends Thread {
 	//MyGameGUI g = new MyGameGUI();
-	List<Robot> ro;
-	List<Fruit> f;
+	List<Robots> ro;
+	List<Fruits> f;
 	ArrayList<Point3D> points;
 	DGraph graph;
 	game_service game;
 	FruitsAlgo fruits;
 	private String num;
 	public KML_Logger() {
-		ro = new ArrayList<Robot>();
-		f = new ArrayList<Fruit>();
+		ro = new ArrayList<Robots>();
+		f = new ArrayList<Fruits>();
 		points = new ArrayList<>();
 		graph = new DGraph();
 	}
 	public void init (game_service game,String s) {
 		this.game = Game_Server.getServer(Integer.valueOf(s));
 		this.game = game;
-		f =  new FruitsAlgo(this.game).fruit;
-		ro =  new RobotsAlgo(this.game).robot;
+		f =  new FruitsAlgo(this.game).fruits;
+		ro =  new RobotsAlgo(this.game).robots;
 		graph.init(game.getGraph());
 		this.num = s;
 		this.game.startGame();
@@ -53,11 +53,11 @@ public class KML_Logger extends Thread {
     public String PlaceMarkFruit() {
     	String s="";
 		String t="";
-		f =  new FruitsAlgo(this.game).fruit;
+		f =  new FruitsAlgo(this.game).fruits;
 		String date = new SimpleDateFormat("dd-MM-yyyy").format(new Date());
 		String hour  = new SimpleDateFormat("HH:mm:ss").format(new Date());
 		String FullDate = date+"T"+hour+"Z";
-		for (Fruit fruit : f) {
+		for (Fruits fruit : f) {
 				s+=      "      <Placemark>\n" + 
 						"        <TimeStamp>\n" ;
 				t=t.replaceAll("T", " ");
@@ -81,11 +81,11 @@ public class KML_Logger extends Thread {
     	
     public String PLaceMarkRobots() {
     	String s="";
-		ro =  new RobotsAlgo(this.game).robot;
+		ro =  new RobotsAlgo(this.game).robots;
     	String date = new SimpleDateFormat("dd-MM-yyyy").format(new Date());
 		String hour  = new SimpleDateFormat("HH:mm:ss").format(new Date());
 		String FullDate = date+"T"+hour+"Z";
-    		for (Robot robot : ro) {
+    		for (Robots robot : ro) {
     			
     	
 				s+=      "      <Placemark>\n" + 

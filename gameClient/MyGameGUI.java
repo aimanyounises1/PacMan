@@ -5,14 +5,15 @@ import Server.game_service;
 import algorithms.Game_Algo;
 import algorithms.Graph_Algo;
 import dataStructure.DGraph;
-import dataStructure.NodeData;
+import dataStructure.Node;
 import dataStructure.edge_data;
 import dataStructure.graph;
 import dataStructure.node_data;
-import element.Fruit;
+import element.Fruits;
 import element.FruitsAlgo;
-import element.Robot;
+import element.Robots;
 import element.RobotsAlgo;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 import utils.Point3D;
@@ -31,7 +32,7 @@ public class MyGameGUI extends Thread {
     public  RobotsAlgo robots;
     public  Game_Algo game_algo;
     private boolean b , menual, auto = false;
-    private Robot r;
+    private Robots r;
     public KML_Logger kml;
    // DGraph d = new DGraph();
 
@@ -86,7 +87,7 @@ public class MyGameGUI extends Thread {
     }
     public void FruitsGui(){
         this.fruits = new FruitsAlgo(this.server);
-        for(Fruit f : this.fruits.fruit){
+        for(Fruits f : this.fruits.fruits){
         	if(f.getType()== 1) {
             StdDraw.picture(f.getLocation().x(),f.getLocation().y(),"data/banana.png",0.001,0.0008);
         }else {
@@ -100,7 +101,7 @@ public class MyGameGUI extends Thread {
         this.robots = new RobotsAlgo(this.server);
         this.game_algo.locationRobot();
         this.robots = new RobotsAlgo(this.server);
-        for(Robot c : this.robots.robot){
+        for(Robots c : this.robots.robots){
         	StdDraw.picture(c.getLocation().x(),c.getLocation().y(),"data/robot.png", 0.001,0.0007);
         }
     }
@@ -116,7 +117,7 @@ public class MyGameGUI extends Thread {
 		List<String> list = this.server.move();
 		if (list != null) {
 			this.robots.list(list);
-			for (Robot r : this.robots.robot) {
+			for (Robots r : this.robots.robots) {
 				if (r.getDest() == -1) {
 					this.game_algo.nextNode(r, this.Graph);
 					this.server.move();
@@ -172,7 +173,7 @@ public class MyGameGUI extends Thread {
 		List<String> log = this.server.move();
 		if (log != null) {
 			this.robots.list(log);
-			for (Robot r : this.robots.robot) {
+			for (Robots r : this.robots.robots) {
 				if (r.getDest() == -1) {
 					this.server.move();
 				}
@@ -182,13 +183,13 @@ public class MyGameGUI extends Thread {
 	}
     private node_data getTheRobot(double x, double y) {
         this.robots.list(this.server.getRobots());
-        for(Robot n : this.robots.robot) {
+        for(Robots n : this.robots.robots) {
             double nX = n.getLocation().x();
             double nY = n.getLocation().y();
             if ((x < nX + 0.0004) && (x > nX - 0.0004))
                 if ((y < nY + 0.0004) && (y > nY - 0.0004)){
                     Point3D ansP = new Point3D(nX, nY, 0);
-                    node_data ans = new NodeData(ansP);
+                    node_data ans = new Node(ansP);
                     this.r = n;
                     return ans;
                 }
