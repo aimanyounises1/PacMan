@@ -11,7 +11,7 @@ import java.util.*;
  * @author
  *
  */
-public class Graph_Algo implements graph_algorithms, Serializable {
+public class Graph_Algo implements graph_algorithms {
 
 	public graph algo;
 
@@ -312,7 +312,7 @@ public class Graph_Algo implements graph_algorithms, Serializable {
 	public graph copy() {
 		graph ans = new DGraph();
 		for (node_data n : this.algo.getV()) {
-			node_data temp = new NodeData((NodeData) n);
+			node_data temp = new NodeData((NodeData)(n));
 			ans.addNode(temp);
 		}
 		for (node_data n : ans.getV()) {

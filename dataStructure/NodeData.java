@@ -4,7 +4,7 @@ import utils.Point3D;
 
 import java.io.Serializable;
 
-public class NodeData implements node_data, Serializable {
+public class NodeData implements node_data {
 
     private int Key;
     private int Tag;

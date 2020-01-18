@@ -13,6 +13,7 @@ import element.Fruits;
 import element.FruitsAlgo;
 import element.Robots;
 import element.RobotsAlgo;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 import utils.Point3D;
@@ -78,13 +79,10 @@ public class MyGameGUI extends Thread {
             this.server.startGame();
             kml = new KML_Logger();
 			kml.init(server, s);
-			// first of all convert dgraph to kml
-			kml.StartKml();
-           this.start();
+			kml.start();
+            this.start();
+            
 			
-            // starts putting the date and the coordinates of each robots and fruits
-            kml.run();
-            kml.Save();
         }
     }
     public void FruitsGui(){

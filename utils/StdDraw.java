@@ -25,7 +25,6 @@ package utils;
  *
  ******************************************************************************/
 import dataStructure.*;
-import gameClient.MyGameGUI;
 
 import java.awt.*;
 
@@ -464,7 +463,6 @@ import javax.swing.*;
  */
 public final class StdDraw implements ActionListener, MouseListener, MouseMotionListener, KeyListener {
     /// public static GUI g = new GUI();
-     public static MyGameGUI gameGui;
 	/**
 	 *  The color black.
 	 */
@@ -1746,11 +1744,11 @@ public final class StdDraw implements ActionListener, MouseListener, MouseMotion
 	 */
 	@Override
 	public void mouseClicked(MouseEvent e) {
-		try {
-			this.gameGui.moveRobotByClick();
-		} catch (InterruptedException ex) {
-			ex.printStackTrace();
-		}
+		//try {
+		//	this.gameGui.moveRobotByClick();
+		//} catch (InterruptedException ex) {
+			//ex.printStackTrace();
+		///}
 	}
 
 	/**
