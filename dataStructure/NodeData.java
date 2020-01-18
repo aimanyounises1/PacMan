@@ -1,141 +1,172 @@
 package dataStructure;
 
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashMap;
+
 import utils.Point3D;
 
-import java.io.Serializable;
+public class NodeData implements node_data,Serializable,Comparator<NodeData> {
+	private static int k=0;
+	private int id;
+	Point3D p;
+	int tag;
+	String s;
+	double weight;
+	int tag2;
+	// a constructor that lets you decide the location and gives you an id 
+	public NodeData(Point3D p) {
+		this.id = k;
+		this.p = p;
+		this.weight= Integer.MAX_VALUE;
+		this.tag=0;
+		k++;
+		
+	}
+	// constructer that lets you decid whats the id and location
+	public NodeData(int id,Point3D p) {
+		this.id = id;
+		this.p = p;
+		this.weight= Integer.MAX_VALUE;
+		this.tag=0;
+		
+	}
+	// copy construcor
+	public NodeData(NodeData other) {
+		this.id=other.id;
+		this.p=other.p;
+		this.weight=other.weight;
+		this.s=other.s;
+		this.tag=other.tag;
+		
+	}
+	//defaulr constructer that sets and id and a random location
+	
+	public NodeData () {
+		this.id=k;
+		this.tag=0;
+		double x=Math.random()*(700-200)+200;
 
-public class NodeData implements node_data {
+		double y=Math.random()*(700-200)+200;
+		this.p=new Point3D(x,y);
+		this.weight=Integer.MAX_VALUE;
+		this.s="";
+		k++;
+		
+	}
+	//conmstructer that letsyou decide the id but sets a random location
+	public NodeData (int id) {
+		this.id=id;
+		this.tag=0;
+		double x=Math.random()*(700-400)+400;
 
-    private int Key;
-    private int Tag;
-    private double Weight;
-    private String Info;
-    private Point3D Location;
-    public static int KeyCount=1;
+		double y=Math.random()*(700-400)+400;
+		this.p=new Point3D(x,y);
+		this.weight=Integer.MAX_VALUE;
+		this.s="";
+		
+	}
+	@Override
+	public int getKey() {
+		// TODO Auto-generated method stub
+		return this.getId();
+	}
 
-    /**
-     * a default constructor
-     */
-    public NodeData() {
-        this.Key = KeyCount++;
-        this.Tag = 0;
-        this.Weight = 0;
-        this.Info = null;
-        this.Location = null;
-    }
+	@Override
+	public Point3D getLocation() {
+		// TODO Auto-generated method stub
+		return this.p;
+	}
 
-    /**
-     * constructor of new node.
-     * @param Location -get the location of the node on x/y/z axis
-     */
-    public NodeData(Point3D Location) {
-        this.Location = new Point3D(Location);
-        this.Key=KeyCount++;
-        this.Tag = 0;
-        this.Weight = 0;
-        this.Info = null;
-    }
+	@Override
+	public void setLocation(Point3D p) {
+		// TODO Auto-generated method stub
+		this.p = p;
+	}
 
-    public NodeData(int key, Point3D Location) {
-        this.Location = new Point3D(Location);
-        this.Key=key;
-        this.Tag = 0;
-        this.Weight = 0;
-        this.Info = null;
-    }
+	@Override
+	public double getWeight() {
+		// TODO Auto-generated method stub
+		return weight;
+	}
 
-    /**
-     * Copy constructor
-     * @param n - the node for copy
-     */
-    public NodeData(NodeData n) {
-        this.Key = n.Key;
-        this.Tag = n.Tag;
-        this.Weight = n.Weight;
-        this.Info = n.Info;
-        this.Location = new Point3D(n.Location);
-    }
+	@Override
+	public void setWeight(double w) {
+		// TODO Auto-generated method stub
+		this.weight = w;
+	}
+	@Override
+	public String getInfo() {
+		// TODO Auto-generated method stub
+	
+		return this.s;
+	}
 
-    /**
-     * @return the key of the node
-     */
-    @Override
-    public int getKey() {
-        return this.Key;
-    }
+	
 
-    /**
-     * @return the location of the node
-     */
-    @Override
-    public Point3D getLocation() {
-        return this.Location;
-    }
+	@Override
+	public void setInfo(String s) {
+		// TODO Auto-generated method stub
+		this.s=s;
 
-    /**
-     * the method change the kocation of the node
-     * @param p - new location  (position) of this node.
-     */
-    @Override
-    public void setLocation(Point3D p) {
-        this.Location = new Point3D(p);
-    }
+	}
+	@Override
+	public int getTag() {
+		// TODO Auto-generated method stub
+		return this.tag;
+	}
 
-    /**
-     * @return the weight of the node
-     */
-    @Override
-    public double getWeight() {
-        return this.Weight;
-    }
+	@Override
+	public void setTag(int t) {
+		// TODO Auto-generated method stub
+		this.tag = t;
+		
+	}
+	
+	public int getTag2() {
+		// TODO Auto-generated method stub
+		return this.tag2;
+	}
 
-    /**
-     * this method change the weight of the node
-     * @param w - the new weight
-     */
-    @Override
-    public void setWeight(double w) {
-        this.Weight = w;
-    }
+	
+	public void setTag2(int t) {
+		this.tag2 = t;
+		
+	}
+	public int getId() {
+		return id;
+	}
+	
 
-    /**
-     * @return the info of the node
-     */
-    @Override
-    public String getInfo() {
-        return this.Info;
-    }
+	@Override
+	public int compare(NodeData o1, NodeData o2) {
+		// TODO Auto-generated method stub
+		if(o1.weight<o2.weight) {
+			return -1;
+		}
+		if(o1.weight > o2.weight)	
+		return 1;
+		
+		return 0;
+	}
+	public boolean equal(NodeData a) {
+		return this.id == a.id;
+	}
+	
+	public String toString()
+	{
+		
+		return ""+this.id;
+	}
+	public boolean equals(NodeData n)
+	{
+		if(this.id!=n.id||this.p!=this.p)
+			return false;
+		return true;
+			
+	}
 
-    /**
-     * this method change the info of the node
-     * @param s - new info
-     */
-    @Override
-    public void setInfo(String s) {
-        this.Info = s;
-    }
+	
 
-    /**
-     * @return the tag of the node
-     */
-    @Override
-    public int getTag() {
-        return this.Tag;
-    }
-
-    /**
-     * this method change the tag of the node
-     * @param t - the new value of the tag
-     */
-    @Override
-    public void setTag(int t) {
-        this.Tag = t;
-    }
-
-    /**
-     * @return String that represent the node.
-     */
-    public String toString() {
-        return ""+this.getKey();
-    }
 }

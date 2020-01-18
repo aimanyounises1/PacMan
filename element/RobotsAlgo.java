@@ -42,4 +42,8 @@ public class RobotsAlgo {
         }
         return size;
     }
+    public List<Robots> getrobots()
+    {
+    	return this.robots;
+    }
 }

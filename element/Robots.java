@@ -1,26 +1,29 @@
 package element;
 
+import java.util.List;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 import utils.Point3D;
 
 public class Robots  {
-    private int src;
-    private int dest;
-    private int id;
-    private Point3D pos;
-    private int speed;
-    private double value;
-    private String pic;
-    public Robots(){
-        this.src = 0;
-        this.dest = 0;
-        this.id = 0;
-        this.pos = null;
-        this.speed = 0;
-        this.value = 0;
-        this.pic = "robot.png";
+	 private int src;
+	    private int dest;
+	    private int id;
+	    private Point3D pos;
+	    private int speed;
+	    private double value;
+	    private String pic;
+	    public Robots(){
+	        this.src = 0;
+	        this.dest = 0;
+	        this.id = 0;
+	        this.pos = null;
+	        this.speed = 0;
+	        this.value = 0;
+	        this.pic = "robot.png";
     }
+	   
 
     public Robots init(String json) {
         Robots temp = new Robots();

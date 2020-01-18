@@ -1,329 +1,390 @@
 package algorithms;
 
-import dataStructure.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Stack;
+import dataStructure.DGraph;
+import dataStructure.NodeData;
+import dataStructure.edge_data;
+import dataStructure.graph;
+import dataStructure.node_data;
 import utils.Point3D;
-import java.io.*;
-import java.util.*;
 
 /**
  * This empty class represents the set of graph-theory algorithms
  * which should be implemented as part of Ex2 - Do edit this class.
- * @author
+ * @author 
+ * @param <DGraph>
  *
  */
-public class Graph_Algo implements graph_algorithms {
 
-	public graph algo;
 
-	public Graph_Algo(){
-		this.algo = new DGraph();
-	}
+public class Graph_Algo implements graph_algorithms, Serializable {
+	public graph g;
+	public graph g1;
 
-	public Graph_Algo(graph d){
-		init(d);
-	}
-
-	/**
-	 * This method get a graph and make him to the algo graph.
-	 * @param g -the algo graph
-	 */
-	@Override
 	public void init(graph g) {
-		this.algo=g;
+		if (g instanceof DGraph) {
+			this.g = (DGraph) g;
+			this.g1 = g;
+
+		} else
+			throw new RuntimeException("not instance of DGraph");
+
+	}
+	
+	public Graph_Algo(graph g) {
+		if (g instanceof DGraph) {
+			this.g = (DGraph) g;
+			this.g1 = g;
+
+		} else
+			throw new RuntimeException("not instance of DGraph");
+
 	}
 
-
-	/**
-	 * This method get a file name of graph and make him to the algo graph.
-	 * @param file_name -the name of the file
-	 */
+	public Graph_Algo() {
+		this.g = new DGraph();
+	}
+// initiats the graph using sirilizable 
 	@Override
 	public void init(String file_name) {
+
+		// Read objects
 		try {
-			FileInputStream file = new FileInputStream(file_name);
-			ObjectInputStream in = new ObjectInputStream(file);
-			this.algo = (graph) in.readObject();
-			in.close();
-			file.close();
-		}
-		catch(IOException ex) {
-			System.out.println("IOException is caught");
-		}
-		catch(ClassNotFoundException ex) {
-			System.out.println("ClassNotFoundException is caught");
+			FileInputStream fi = new FileInputStream(new File(file_name));
+			ObjectInputStream oi = new ObjectInputStream(fi);
+			this.init((graph) oi.readObject());
+
+			oi.close();
+			fi.close();
+
+		} catch (FileNotFoundException e) {
+			System.out.println("File not found");
+
+		} catch (IOException e) {
+			System.out.println("Error initializing stream");
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
+	
+	//saves the graph in a file using seriliozable
 
-	/**
-	 * this methods save the graph as a file
-	 * @param file_name - to save withe this name on the computer
-	 */
 	@Override
 	public void save(String file_name) {
 		try {
-			FileOutputStream file = new FileOutputStream(file_name);
-			ObjectOutputStream out = new ObjectOutputStream(file);
-			out.writeObject(this.algo);
-			out.close();
-			file.close();
+			FileOutputStream f = new FileOutputStream(new File(file_name));
+			ObjectOutputStream o = new ObjectOutputStream(f);
+			// Write objects to file
+			o.writeObject(this.g);
+			o.close();
+			f.close();
+		} catch (FileNotFoundException e) {
+			System.out.println("File not found");
+		} catch (IOException e) {
+			System.out.println("Error initializing stream");
+			e.printStackTrace();
 		}
-		catch (IOException ex) {
-			System.out.println("IOException is caught");
+
+	}
+//sets the node i's tag to 2 and all its neighbours's tags to 1 if thier tag is 0
+	private void checkneigh(node_data i) {
+		g.getNode(i.getKey()).setTag(2);
+		if (g.getE(i.getKey()) != null) {
+
+			for (edge_data k : g.getE(i.getKey())) {
+				if (g.getEdge(i.getKey(), k.getDest()) != null && g.getNode(k.getDest()).getTag() == 0)
+					g.getNode(k.getDest()).setTag(1);
+			}
 		}
+
+	}
+//checks of all the nodes's tags are 2 or not
+	private boolean alltag() {
+		for (node_data n : g.getV())
+			if (n.getTag() != 2)
+				return false;
+		return true;
+	}
+//checks if theres a node with tag 1 if so it returns true otherwise false
+	private boolean cont() {
+		for (node_data n : g.getV())
+			if (n.getTag() == 1)
+				return true;
+		return false;
 	}
 
-	/**
-	 * @return true if exist a valid path from EVREY node to each else false.
-	 */
+	//if the graph is connected it returns true otherwise false it does so by checking if we can get from each node in the graph to all the other nodes
 	@Override
 	public boolean isConnected() {
-		if(this.algo.nodeSize()==1 || this.algo.nodeSize()==0) return true;
-		graph ans = this.copy();
-		changeTagNode(ans);
-		Iterator it = ans.getV().iterator();
-		dfs(ans,(node_data) it.next());
-		it = ans.getV().iterator();
-		while (it.hasNext()) {
-			node_data temp = (node_data) it.next();
-			if (temp.getTag() == 0) return false;
+		for (node_data nn : g.getV()) {
+			for (node_data n : g.getV())
+				//mark all nodes as un visited
+				n.setTag(0);
+			g.getNode(nn.getKey()).setTag(2);
+			checkneigh(nn);
+			while (cont()) {
+				for (node_data x : g.getV()) {
+
+					if (x.getTag() == 1)
+						checkneigh(x);
+				}
+			}
+
+			if (alltag() != true)
+				return false;
+
 		}
-		changeTagEdge(ans);
-		changeTagNode(ans);
-		oppositeDest(ans);
-		it = ans.getV().iterator();
-		dfs(ans,(node_data) it.next());
-		it = ans.getV().iterator();
-		while (it.hasNext()) {
-			node_data temp = (node_data) it.next();
-			if (temp.getTag() == 0) return false;
-		}
+		for (node_data n : g.getV())
+			n.setTag(0);
+
 		return true;
 	}
 
-	public void dfs(graph copied,node_data n) {
-		if (copied.getE(n.getKey()) != null) {
-			Iterator it = copied.getE(n.getKey()).iterator();
-			while (it.hasNext()) {
-				edge_data e = (edge_data) it.next();
-				node_data dest = copied.getNode(e.getDest());
-				if (dest.getTag() == 0) {
-					dest.setTag(1);
-					dfs(copied,dest);
-				}
-			}
-		}
-	}
-
-
-	public void oppositeDest(graph d) {
-		Iterator it = d.getV().iterator();
-		while (it.hasNext()) {
-			node_data n = (node_data) it.next();
-			if (d.getE(n.getKey()) != null) {
-				Iterator it1 = d.getE(n.getKey()).iterator();
-				while (it1.hasNext()) {
-					edge_data e = (edge_data) it1.next();
-					if (e.getTag() == 0) {
-						if (d.getEdge(e.getDest(), e.getSrc()) != null) {
-							EdgeData temps = new EdgeData((EdgeData) d.getEdge(e.getSrc(), e.getDest()));
-							double tempWeight1 = d.getEdge(e.getSrc(), e.getDest()).getWeight();
-							double tempWeight2 = d.getEdge(e.getDest(), e.getSrc()).getWeight();
-							d.connect(e.getSrc(), e.getDest(), tempWeight2);
-							d.connect(temps.getDest(), temps.getSrc(), tempWeight1);
-							d.getEdge(temps.getDest(), temps.getSrc()).setTag(1);
-							d.getEdge(temps.getSrc(), temps.getDest()).setTag(1);
-							it1 = d.getE(n.getKey()).iterator();
-						}
-						else {
-							d.connect(e.getDest(), e.getSrc(), e.getWeight());
-							d.removeEdge(e.getSrc(), e.getDest());
-							d.getEdge(e.getDest(), e.getSrc()).setTag(1);
-							it1 = d.getE(n.getKey()).iterator();
-						}
-					}
-				}
-			}
-		}
-	}
-
-
-
-	public void changeTagNode(graph g) {
-		Iterator it = g.getV().iterator();
-		while (it.hasNext()) {
-			node_data n = (node_data) it.next();
-			n.setTag(0);
-		}
-	}
-
-
-	public void changeTagEdge(graph g) {
-		Iterator it = g.getV().iterator();
-		while (it.hasNext()) {
-			node_data n = (node_data) it.next();
-			if (g.getE(n.getKey()) != null) {
-				Iterator itEdge = g.getE(n.getKey()).iterator();
-				while (itEdge.hasNext()) {
-					edge_data e = (edge_data) itEdge.next();
-					e.setTag(0);
-				}
-			}
-		}
-	}
-
-	/**
-	 * This method get Src and Dest that represented by the key of the desired nodes.
-	 * @param src - start node
-	 * @param dest - end (target) node
-	 * @return the length of the shortest path between src to dest
-	 */
 	@Override
 	public double shortestPathDist(int src, int dest) {
-		if(src==dest) return 0;
-		if(this.algo.getNode(src)==null || this.algo.getNode(dest)==null){
-			throw new RuntimeException("This nodes are not exist");
+		// TODO Auto-generated method stub
+		// we start by setting src weight to zero
+		if (g1.getNode(src) == null || g1.getNode(dest) == null) {
+			throw new RuntimeException("One or two of nodes is not found in graph");
 		}
-		changeTagNode(this.algo);
-		Iterator it = this.algo.getV().iterator();
-		while (it.hasNext()) {
-			node_data n = (node_data) it.next();
-			n.setWeight(Integer.MAX_VALUE);
+		ResetWieght(g1);
+		g1.getNode(src).setWeight(0);
+		// set all tags to zero
+		setTags(g1.getV());
+		ArrayList<NodeData> l = Convert(g1.getV());
+		l.add((NodeData) g1.getNode(src));
+		while (!l.isEmpty()) {
+			NodeData Smallest = FindMin(l);
+			neigh(Smallest, l);
+			l.remove(Smallest);
 		}
-		node_data temp = this.algo.getNode(src);
-		temp.setWeight(0);
-		shortestPathDistRec(temp, this.algo.getNode(dest));
-		return this.algo.getNode(dest).getWeight();
+		// reset the info
+		ResetInfo(g1);
+		// return the shortest path weight
+		return g1.getNode(dest).getWeight();
+	}
+// a function to reset all weights for evert vertex in graph after using the algorithms(shortespath..etc)
+	private void ResetWieght(graph g1) {
+		// TODO Auto-generated method stub
+		for (node_data data : g1.getV()) {
+
+			data.setWeight(Integer.MAX_VALUE);
+		}
+
+	}
+// reverse all the tags to zero to use the shortest path again,hence is zero represents not visited
+	// vertex in graph
+	private void setTags(Collection<node_data> v2) {
+		// TODO Auto-generated method stub
+		for (node_data data : v2) {
+			data.setTag(0);
+		}
 	}
 
-	// help methods for the shortestPathDist method.
-	public void shortestPathDistRec(node_data n, node_data dest) {
-		if (n.getTag() == 1 && n.getKey() == dest.getKey()) {
-			return;
-		}
-		if (this.algo.getE(n.getKey()) != null) {
-			Iterator it = this.algo.getE(n.getKey()).iterator();
-			while (it.hasNext()) {
-				edge_data e = (edge_data) it.next();
-				node_data d = this.algo.getNode(e.getDest());
-				if (this.algo.getNode(e.getSrc()).getWeight() + e.getWeight() < d.getWeight()) {
-					d.setWeight(this.algo.getNode(e.getSrc()).getWeight() + e.getWeight());
-					n.setTag(1);
-					shortestPathDistRec(this.algo.getNode(e.getDest()), dest);
+	private void neigh(NodeData Vert, ArrayList<NodeData> vertexes) {
+		double Weight = 0;
+		if (Vert != null)
+			for (edge_data e : g1.getE(Vert.getKey())) {
+				if (g1.getNode(e.getSrc()).getTag() != 1) {
+					// weight is now the vertex weight + edge weight
+					// NodeData d = (NodeData) g1.getNode(e.getDest());
+					Weight = g1.getNode(Vert.getKey()).getWeight() + e.getWeight();
+					// if weight is smaller than dest vertex weight then vertex weight is the new
+					// weight g.getNode(e.getDest()()).setWeight(Weight);
+					if (g1.getNode(e.getDest()).getWeight() >= Weight) {
+						g1.getNode(e.getDest()).setWeight(Weight);
+						// the previous vertex of this current vertex
+						g1.getNode(e.getDest()).setInfo(String.valueOf(e.getSrc()));
+					}
+					// we add the vertex to the list because its not visited
+					vertexes.add((NodeData) g1.getNode(e.getDest()));
 				}
 			}
+		g1.getNode(Vert.getKey()).setTag(1);
+	}
+// we convert the collection to arraylist because its easy to handle with,this function is used in
+	//shortest path destination
+	private ArrayList<NodeData> Convert(Collection<node_data> v2) {
+		// TODO Auto-generated method stub
+		ArrayList<NodeData> l = new ArrayList<>();
+		for (node_data v : v2) {
+			NodeData d = (NodeData) v;
+			l.add(d);
 		}
+		return l;
+	}
+// a function to find node associated with minimum weight because java util priority queue don't support 
+	//us in this case
+	private NodeData FindMin(ArrayList<NodeData> v) {
+		// TODO Auto-generated method stub
+		NodeData d = v.get(0);
+		for (NodeData vert : v) {
+			if (d.getWeight() > vert.getWeight()) {
+				d = vert;
+			}
+		}
+		return d;
 	}
 
-	/**
-	 *This method get Src and Dest that represented by the key of the desired node
-	 * @param src - start node
-	 * @param dest - end (target) node
-	 * @return the vertexes that should pass in the shortest path.
-	 */
 	@Override
 	public List<node_data> shortestPath(int src, int dest) {
-		List<node_data> ans = new LinkedList<>();
-		this.shortestPathDist(src,dest);
-		if(this.algo.getNode(src).getWeight()==Integer.MAX_VALUE  || this.algo.getNode(dest).getWeight()==Integer.MAX_VALUE){
-			System.out.print("There is no a path between this nodes. ");
-			return null;
+		// TODO Auto-generated method stub
+		// we used stack to reverse the path between src and des
+		// graph g2 = this.g1;
+		Stack<node_data> s = new Stack<>();
+		// the returned array list
+		ArrayList<node_data> path = new ArrayList<>();
+		// we use shortest path function to know the path
+		shortestPathDist(src, dest);
+		// the prev vertex of src vertex is src :)
+		g1.getNode(src).setInfo(String.valueOf(g1.getNode(src).getKey()));
+		String source = g1.getNode(dest).getInfo();
+		node_data a = g1.getNode(dest);
+		path.add(g1.getNode(src));
+		while (!a.getInfo().equals(g1.getNode(src).getInfo())) {
+			a = g1.getNode(Integer.valueOf(source));
+			s.push(a);
+			source = g1.getNode(Integer.valueOf(source)).getInfo();
 		}
-		graph tempGraph = this.copy();
-		node_data min = tempGraph.getNode(dest);
-		oppositeDest(tempGraph);
-		ans.add(min);
-		while (min.getKey()!=src){
-			Collection<edge_data> coll =tempGraph.getE(min.getKey());
-			if(coll!=null) {
-				for (edge_data e : coll) {
-					node_data temp = tempGraph.getNode(e.getDest());
-					if (temp.getWeight() + e.getWeight() == min.getWeight()) {
-						min = temp;
-					}
-				}
-			}
-			ans.add(min);
+		// we used stack to reverse the path to the node that we came from
+		while (!s.isEmpty()) {
+			a = s.pop();
+			path.add(a);
 		}
-		List<node_data> temp = new LinkedList<>();
-		for (int i = ans.size()-1; i >=0 ; i--) {
-			temp.add(ans.get(i));
+		path.add(g1.getNode(dest));
+		// return the info of every node in graph
+		return path;
+	}
+// a function to reset info of every vertex
+	private void ResetInfo(graph g1) {
+		// TODO Auto-generated method stub
+		for (node_data data : g1.getV()) {
+		data.setInfo(g.getNode(data.getKey()).getInfo());
 		}
-		ans=temp;
-		return ans;
 	}
 
-	/**
-	 * @param targets - group of Vertexe
-	 * @return the most optional Path to visit each node in the targets List
-	 */
+	private DGraph trans2(List<Integer> targets) {
+		DGraph d = new DGraph();
+		for (int nn : targets) {
+			if (g.getNode(nn) == null)
+				throw new RuntimeException("a node in this list is not contained in the graph");
+			NodeData n = new NodeData((NodeData) g.getNode(nn));
+			d.addNode(n);
+
+		}
+		for (node_data nn : d.getV())
+			if (g.getE(nn.getKey()) != null)
+				for (edge_data e : g.getE(nn.getKey())) {
+					if (targets.contains(e.getDest()))
+						d.connect(nn.getKey(), e.getDest(), e.getWeight());
+
+				}
+
+		return d;
+	}
+//returns true if theres a node in dgraph d that doesnt have a tag of 1 
+	private boolean allnottag(DGraph d) {
+		for (node_data n : d.getV()) {
+			if (n.getTag() != 1)
+				return true;
+		}
+
+		return false;
+	}
+// creates a graph that is contained in the original graph which consists of only the nodes in targets and only the edges that connects between them and it returns the shortest path which goes through all the nodes and if the nodes arent connected it returns an error
 	@Override
 	public List<node_data> TSP(List<Integer> targets) {
-		List<Integer> targets2 = new LinkedList<>();
-		for (int i = 0; i <targets.size() ; i++) {
-			if(!targets2.contains(targets.get(i))) targets2.add(targets.get(i));
+		DGraph d = trans2(targets);
+		DGraph d2 = new DGraph(d);
+		double min2 = 0;
+		double min3 = Double.MAX_VALUE;
+		double min;
+		Graph_Algo x = new Graph_Algo();
+		List<node_data> ar = new ArrayList<node_data>();
+		ArrayList<node_data> arr = new ArrayList<node_data>();
+		ArrayList<node_data> a = new ArrayList<node_data>();
+		x.init(d);
+		if (!x.isConnected()) {
+			System.out.print("nodes are not connected");
+			return null;
 		}
-		targets=targets2;
-		List<node_data> ans = new LinkedList<>();
-		if(targets.size()==1){
-			ans.add(this.algo.getNode(targets.get(0)));
-			return ans;
-		}
-		double tempshortestPath = 0;
-		int tempk1 = 0;
-		int tempk2 = 0;
-		int k1 = targets.get(0);
-		while (targets.size()!=0) {
-			double minshortestPath = Integer.MAX_VALUE;
-			for (int j = 0; j < targets.size(); j++) {
-				int k2 = targets.get(j);
-				if (k1 != k2) {
-					tempshortestPath = minshortestPath;
-					if (this.shortestPathDist(k1, k2) == Integer.MAX_VALUE) return null;
-					minshortestPath = Math.min(minshortestPath, this.shortestPathDist(k1, k2));
-					if (tempshortestPath != minshortestPath) {
-						tempk1 = k1;
-						tempk2 = k2;
+		for (node_data n : d2.getV()) {
+			for (node_data nn : d2.getV())
+				nn.setTag(0);
+			for (node_data nn : d.getV())
+				nn.setTag(0);
+			arr.removeAll(arr);
+			min2 = 0;
+			int i3 = 0;
+			d2.getNode(n.getKey()).setTag(1);
+			d2.getNode(n.getKey()).setTag(1);
+			int i2 = n.getKey();
+			arr.add(n);
+			while (allnottag(d2)) {
+				min = Double.MAX_VALUE;
+				for (node_data f : d.getV()) {
+					if (d2.getNode(f.getKey()).getTag() != 1) {
+						if (x.shortestPathDist(i2, f.getKey()) < min) {
+							min = x.shortestPathDist(i2, f.getKey());
+							i3 = f.getKey();
+							ar = shortestPath(i2, i3);
+							ar.remove(0);
+
+						}
 					}
 				}
+				min2 = min2 + min;
+				d2.getNode(i3).setTag(1);
+				arr.addAll(ar);
+				ar.removeAll(ar);
+				i2 = i3;
 			}
-			List<node_data> add = this.shortestPath(tempk1, tempk2);
-			for (int j = 0; j < add.size(); j++) {
-				node_data n = add.get(j);
-				if (ans.size() == 0 || ans.get(ans.size() - 1).getKey()!=n.getKey()) {
-					ans.add(n);
-				}
-				for (int k = 0; k < targets.size(); k++) {
-					int k4 = targets.get(k);
-					if (n.getKey() == k4) {
-						targets.remove(k);
-					}
-				}
+
+			if (min2 < min3) {
+				min3 = min2;
+				a = new ArrayList<node_data>(arr);
 			}
-			k1 = tempk2;
 		}
-		return ans;
+		return a;
+	}
+	
+	
+	
+	@Override
+	//copies the graph g to another graph
+	public graph copy() {
+		graph g=new DGraph();
+		for(node_data nn: this.g.getV()) {
+			node_data n=new NodeData(nn.getKey());
+			n.setInfo(nn.getInfo());
+			n.setTag(nn.getTag());
+			n.setWeight(nn.getWeight());
+			n.setLocation(new Point3D(nn.getLocation()));
+			g.addNode(n);
+		}
+		for(node_data nn: g.getV()) {
+			Collection<edge_data> edges=g.getE(nn.getKey());
+			Iterator<edge_data> itr=edges.iterator();
+			while(itr.hasNext()) {
+				edge_data e=itr.next();
+				g.connect(e.getSrc(),e.getDest(),e.getWeight());
+			}
+		}
+		return g;
 	}
 
-	/**
-	 * This method compute a deep copy of this graph.
-	 * @return the copy graph
-	 */
-	@Override
-	public graph copy() {
-		graph ans = new DGraph();
-		for (node_data n : this.algo.getV()) {
-			node_data temp = new NodeData((NodeData)(n));
-			ans.addNode(temp);
-		}
-		for (node_data n : ans.getV()) {
-			Collection<edge_data> coll = this.algo.getE(n.getKey());
-			if(coll!=null) {
-				for (edge_data e : this.algo.getE(n.getKey())) {
-					edge_data temp = new EdgeData((EdgeData) e);
-					ans.connect(temp.getSrc(), temp.getDest(), temp.getWeight());
-				}
-			}
-		}
-		return ans;
-	}
 }

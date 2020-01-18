@@ -42,6 +42,11 @@ public class FruitsAlgo {
         }
         return CountFruits;
     }
+    
+    public List<Fruits> getfruits()
+    {
+    	return this.fruits;
+    }
 
     public FruitsAlgo(game_service numGame) {
         this.num = numGame;

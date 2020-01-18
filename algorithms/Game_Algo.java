@@ -12,6 +12,10 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 public class Game_Algo {
 
     private DGraph GraphGame;
@@ -111,5 +115,6 @@ public class Game_Algo {
            this.server.move();
         }
     }
+    
+   
 }
-
