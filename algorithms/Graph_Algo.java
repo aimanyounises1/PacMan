@@ -21,19 +21,13 @@ import dataStructure.graph;
 import dataStructure.node_data;
 import utils.Point3D;
 
-/**
- * This empty class represents the set of graph-theory algorithms
- * which should be implemented as part of Ex2 - Do edit this class.
- * @author 
- * @param <DGraph>
- *
- */
-
-
 public class Graph_Algo implements graph_algorithms, Serializable {
 	public graph g;
 	public graph g1;
-
+	/**
+	 * @Init the graph
+	 * @param graph
+	 */
 	public void init(graph g) {
 		if (g instanceof DGraph) {
 			this.g = (DGraph) g;
@@ -57,7 +51,9 @@ public class Graph_Algo implements graph_algorithms, Serializable {
 	public Graph_Algo() {
 		this.g = new DGraph();
 	}
-// initiats the graph using sirilizable 
+/**
+ * @init the Grapgh from file name
+ */
 	@Override
 	public void init(String file_name) {
 
@@ -81,8 +77,12 @@ public class Graph_Algo implements graph_algorithms, Serializable {
 		}
 	}
 	
-	//saves the graph in a file using seriliozable
-
+	/**
+	 * @saves the graph in a file using seriliozable
+	 */
+/**
+ * @saves the graph to file name
+ */
 	@Override
 	public void save(String file_name) {
 		try {
@@ -100,7 +100,10 @@ public class Graph_Algo implements graph_algorithms, Serializable {
 		}
 
 	}
-//sets the node i's tag to 2 and all its neighbours's tags to 1 if thier tag is 0
+/**
+ * @sets the node i's tag to 2 and all its neighbours's tags to 1 if thier tag is 0
+ * @param i
+ */
 	private void checkneigh(node_data i) {
 		g.getNode(i.getKey()).setTag(2);
 		if (g.getE(i.getKey()) != null) {
@@ -112,14 +115,20 @@ public class Graph_Algo implements graph_algorithms, Serializable {
 		}
 
 	}
-//checks of all the nodes's tags are 2 or not
+/**
+ * @checks of all the nodes's tags are 2 or not
+ * @return boolean
+ */
 	private boolean alltag() {
 		for (node_data n : g.getV())
 			if (n.getTag() != 2)
 				return false;
 		return true;
 	}
-//checks if theres a node with tag 1 if so it returns true otherwise false
+/**
+ * @checks if theres a node with tag 1 if so it returns true otherwise false
+ * @return boolean
+ */
 	private boolean cont() {
 		for (node_data n : g.getV())
 			if (n.getTag() == 1)
@@ -127,7 +136,10 @@ public class Graph_Algo implements graph_algorithms, Serializable {
 		return false;
 	}
 
-	//if the graph is connected it returns true otherwise false it does so by checking if we can get from each node in the graph to all the other nodes
+	/**
+	 * @if the graph is connected it returns true otherwise false it does
+	 *  so by checking if we can get from each node in the graph to all the other nodes
+	 */
 	@Override
 	public boolean isConnected() {
 		for (node_data nn : g.getV()) {
@@ -155,15 +167,20 @@ public class Graph_Algo implements graph_algorithms, Serializable {
 	}
 
 	@Override
+	/**
+	 * @we start by setting src weight to zero
+	 * @set all tags to zero
+	 * @reset the info
+	 * @return the shortest path weight
+	 */
 	public double shortestPathDist(int src, int dest) {
 		// TODO Auto-generated method stub
-		// we start by setting src weight to zero
 		if (g1.getNode(src) == null || g1.getNode(dest) == null) {
 			throw new RuntimeException("One or two of nodes is not found in graph");
 		}
 		ResetWieght(g1);
 		g1.getNode(src).setWeight(0);
-		// set all tags to zero
+		
 		setTags(g1.getV());
 		ArrayList<NodeData> l = Convert(g1.getV());
 		l.add((NodeData) g1.getNode(src));
@@ -172,12 +189,14 @@ public class Graph_Algo implements graph_algorithms, Serializable {
 			neigh(Smallest, l);
 			l.remove(Smallest);
 		}
-		// reset the info
 		ResetInfo(g1);
-		// return the shortest path weight
 		return g1.getNode(dest).getWeight();
 	}
-// a function to reset all weights for evert vertex in graph after using the algorithms(shortespath..etc)
+/**
+ * @function to reset all weights for evert vertex in graph after 
+ * using the algorithms(shortespath..etc)
+ * @param g1
+ */
 	private void ResetWieght(graph g1) {
 		// TODO Auto-generated method stub
 		for (node_data data : g1.getV()) {
@@ -186,15 +205,22 @@ public class Graph_Algo implements graph_algorithms, Serializable {
 		}
 
 	}
-// reverse all the tags to zero to use the shortest path again,hence is zero represents not visited
-	// vertex in graph
+/**
+ * @reverse all the tags to zero to use the shortest path again,hence is zero represents not visited
+	vertex in graph
+ * @param v2
+ */
 	private void setTags(Collection<node_data> v2) {
 		// TODO Auto-generated method stub
 		for (node_data data : v2) {
 			data.setTag(0);
 		}
 	}
-
+/**
+ * @Note I just explained the code by slashes
+ * @param Vert
+ * @param vertexes
+ */
 	private void neigh(NodeData Vert, ArrayList<NodeData> vertexes) {
 		double Weight = 0;
 		if (Vert != null)
@@ -216,8 +242,12 @@ public class Graph_Algo implements graph_algorithms, Serializable {
 			}
 		g1.getNode(Vert.getKey()).setTag(1);
 	}
-// we convert the collection to arraylist because its easy to handle with,this function is used in
-	//shortest path destination
+/**
+ * @we convert the collection to arraylist because its easy to handle with,this function is used in
+	shortest path destination
+ * @param v2
+ * @return
+ */
 	private ArrayList<NodeData> Convert(Collection<node_data> v2) {
 		// TODO Auto-generated method stub
 		ArrayList<NodeData> l = new ArrayList<>();
@@ -227,8 +257,12 @@ public class Graph_Algo implements graph_algorithms, Serializable {
 		}
 		return l;
 	}
-// a function to find node associated with minimum weight because java util priority queue don't support 
-	//us in this case
+/**
+ *@a function to find node associated with minimum weight because java util priority queue don't support 
+	us in this case
+ * @param v
+ * @return
+ */
 	private NodeData FindMin(ArrayList<NodeData> v) {
 		// TODO Auto-generated method stub
 		NodeData d = v.get(0);
@@ -239,6 +273,9 @@ public class Graph_Algo implements graph_algorithms, Serializable {
 		}
 		return d;
 	}
+	/**
+	 * @this code explained by slashes
+	 */
 
 	@Override
 	public List<node_data> shortestPath(int src, int dest) {
@@ -269,7 +306,10 @@ public class Graph_Algo implements graph_algorithms, Serializable {
 		// return the info of every node in graph
 		return path;
 	}
-// a function to reset info of every vertex
+/**
+ *@function to reset info of every vertex
+ * @param g1
+ */
 	private void ResetInfo(graph g1) {
 		// TODO Auto-generated method stub
 		for (node_data data : g1.getV()) {
@@ -296,7 +336,10 @@ public class Graph_Algo implements graph_algorithms, Serializable {
 
 		return d;
 	}
-//returns true if theres a node in dgraph d that doesnt have a tag of 1 
+/**
+ * @param d
+ * @return true if theres a node in dgraph d that doesnt have a tag of 1 
+ */
 	private boolean allnottag(DGraph d) {
 		for (node_data n : d.getV()) {
 			if (n.getTag() != 1)
@@ -305,8 +348,10 @@ public class Graph_Algo implements graph_algorithms, Serializable {
 
 		return false;
 	}
-// creates a graph that is contained in the original graph which consists of only the nodes in targets and only the edges that connects between them and it returns the shortest path which goes through all the nodes and if the nodes arent connected it returns an error
-	@Override
+/**
+ *@creates a graph that is contained in the original graph which consists of only the nodes in targets and only the edges that connects between them and it returns the
+ * shortest path which goes through all the nodes and if the nodes arent connected it returns an error
+ */
 	public List<node_data> TSP(List<Integer> targets) {
 		DGraph d = trans2(targets);
 		DGraph d2 = new DGraph(d);
@@ -365,7 +410,9 @@ public class Graph_Algo implements graph_algorithms, Serializable {
 	
 	
 	@Override
-	//copies the graph g to another graph
+	/**
+	 * @copies the graph g to another graph
+	 */
 	public graph copy() {
 		graph g=new DGraph();
 		for(node_data nn: this.g.getV()) {

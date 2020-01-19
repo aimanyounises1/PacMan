@@ -11,13 +11,22 @@ public class RobotsAlgo {
     public List<Robots> robots ;
     private int amountRobots;
     private game_service numGame;
+    /** 
+     * @constructor
+     * @converting the server robots to robots  
+     */
     public RobotsAlgo(game_service numGame) {
         this.numGame = numGame;
         this.amountRobots = RobotSize();
         this.robots = new LinkedList<>();
         this.robots = list(this.numGame.getRobots());
     }
-
+    /** 
+     * converting the server robots to robots  
+     * used to update the server robots
+     * @param list
+     * @return a list f robots 
+     */
     public List<Robots> list(List<String> temp) {
         List<Robots> tempR = new LinkedList<>();
         for (String r : temp) {
@@ -29,6 +38,10 @@ public class RobotsAlgo {
         this.amountRobots = this.robots.size();
         return this.robots;
     }
+    /** 
+     * @param size
+     * @return a size of robots 
+     */
     public int RobotSize() {
         int size = 0;
         try {
@@ -42,6 +55,9 @@ public class RobotsAlgo {
         }
         return size;
     }
+    /** 
+     @return list
+     */
     public List<Robots> getrobots()
     {
     	return this.robots;

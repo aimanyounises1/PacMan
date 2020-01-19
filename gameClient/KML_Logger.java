@@ -12,22 +12,25 @@ import element.Fruits;
 import element.FruitsAlgo;
 import element.Robots;
 import element.RobotsAlgo;
-import utils.Point3D;
 public class KML_Logger extends Thread {
-	//MyGameGUI g = new MyGameGUI();
-	List<Robots> ro;
-	List<Fruits> f;
-	ArrayList<Point3D> points;
-	DGraph graph;
-	game_service game;
-	FruitsAlgo fruits;
+	private List<Robots> ro;
+	private List<Fruits> f;
+	//ArrayList<Point3D> points;
+	private DGraph graph;
+	 private game_service game;
+	private FruitsAlgo fruits;
 	private String num;
+	/** 
+     * @Default Constructor
+     */
 	public KML_Logger() {
 		ro = new ArrayList<Robots>();
 		f = new ArrayList<Fruits>();
-		points = new ArrayList<>();
 		graph = new DGraph();
 	}
+	/** 
+     @Init the kml logger with our game service
+     */
 	public void init (game_service game,String s) {
 		this.game = Game_Server.getServer(Integer.valueOf(s));
 		this.game = game;
@@ -38,6 +41,9 @@ public class KML_Logger extends Thread {
 		this.game.startGame();
 		//System.out.println("Iam in");
 	}
+	/** 
+     @PlaceMark out graph to show the nodes
+     */
 	public String PlaceTheGraph() {
 		String s= "";
 		for (node_data data :this.graph.getV() ) {
@@ -50,6 +56,10 @@ public class KML_Logger extends Thread {
 	}
 		return s;
 	}
+	/** 
+    @PlaceMark our fruits to show the fruits of the game
+    @TimaStamp ued to get the date of this robots while it moving
+     */
     public String PlaceMarkFruit() {
     	String s="";
 		String t="";
@@ -78,7 +88,10 @@ public class KML_Logger extends Thread {
 			}
 			return s;
 		}
-    	
+    /** 
+     @PlaceMark our robots to show the game
+     @TimeStamp of the robots too
+     */
     public String PLaceMarkRobots() {
     	String s="";
 		ro =  new RobotsAlgo(this.game).robots;
@@ -103,6 +116,9 @@ public class KML_Logger extends Thread {
 			}
     return s;	
     }
+    /** 
+     @this method starts the Thread of our kml logger
+     */
     public void run() {
     	String FileName = num+".kml";
     	try {
@@ -146,6 +162,10 @@ public class KML_Logger extends Thread {
     		bufferedWriter.write(this.PlaceTheGraph());
     		long t=System.currentTimeMillis();
     		while(this.game.isRunning()) {
+    			/**
+    			 * @IMPORTANT: we enable buffer writter every half second to avoid a big kml
+    			 * file size
+    		     */
     			if(System.currentTimeMillis()-t>=500)
     			{
     		bufferedWriter.write(this.PlaceMarkFruit());
@@ -164,8 +184,4 @@ public class KML_Logger extends Thread {
     		System.out.println(e);
     	}
    }
-    public static void main(String[] args) {
-    	 MyGameGUI m =new MyGameGUI();
-            
-      } 
 }

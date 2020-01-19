@@ -13,7 +13,9 @@ public class Robots  {
 	    private Point3D pos;
 	    private int speed;
 	    private double value;
-	    private String pic;
+	    /** 
+	      *@Default Constructor
+	      */
 	    public Robots(){
 	        this.src = 0;
 	        this.dest = 0;
@@ -21,9 +23,12 @@ public class Robots  {
 	        this.pos = null;
 	        this.speed = 0;
 	        this.value = 0;
-	        this.pic = "robot.png";
+	       
     }
-	   
+	    /** 
+	      * @param Robot
+	      * @return a new robots from json string
+	      */
 
     public Robots init(String json) {
         Robots temp = new Robots();
@@ -44,7 +49,10 @@ public class Robots  {
         return temp;
     }
 
- 
+    /** 
+     *  
+     * @return id of robot
+     */
     public int getId() {
         return this.id;    }
 

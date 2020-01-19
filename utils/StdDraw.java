@@ -778,7 +778,7 @@ public final class StdDraw  implements ActionListener, MouseListener, MouseMotio
 	 * Draws a polygon with the vertices
 	 * (<em>x</em><sub>0</sub>, <em>y</em><sub>0</sub>),
 	 * (<em>x</em><sub>1</sub>, <em>y</em><sub>1</sub>), ...,
-	 * (<em>x</em><sub><em>n</em>–1</sub>, <em>y</em><sub><em>n</em>–1</sub>).
+	 * (<em>x</em><sub><em>n</em>â€“1</sub>, <em>y</em><sub><em>n</em>â€“1</sub>).
 	 *
 	 * @param  x an array of all the <em>x</em>-coordinates of the polygon
 	 * @param  y an array of all the <em>y</em>-coordinates of the polygon
@@ -807,7 +807,7 @@ public final class StdDraw  implements ActionListener, MouseListener, MouseMotio
 	 * Draws a polygon with the vertices
 	 * (<em>x</em><sub>0</sub>, <em>y</em><sub>0</sub>),
 	 * (<em>x</em><sub>1</sub>, <em>y</em><sub>1</sub>), ...,
-	 * (<em>x</em><sub><em>n</em>–1</sub>, <em>y</em><sub><em>n</em>–1</sub>).
+	 * (<em>x</em><sub><em>n</em>â€“1</sub>, <em>y</em><sub><em>n</em>â€“1</sub>).
 	 *
 	 * @param  x an array of all the <em>x</em>-coordinates of the polygon
 	 * @param  y an array of all the <em>y</em>-coordinates of the polygon
@@ -1489,7 +1489,7 @@ public final class StdDraw  implements ActionListener, MouseListener, MouseMotio
 			String s = JOptionPane.showInputDialog(null,"Choose a Vertex");
 			System.out.println(s);
 			StdDraw.g.AddRobot(Integer.valueOf(s));
-			StdDraw.g.server.startGame();
+			StdDraw.g.game.startGame();
 			//StdDraw.g.start();
 		}if(arg0.getActionCommand().equals("Move Robot")) {
 			
@@ -1501,5 +1501,5 @@ public final class StdDraw  implements ActionListener, MouseListener, MouseMotio
 }
 
 
-//Copyright © 2000–2017, Robert Sedgewick and Kevin Wayne.
+//Copyright Â© 2000â€“2017, Robert Sedgewick and Kevin Wayne.
 //Last updated: Mon Aug 27 16:43:47 EDT 2018.
