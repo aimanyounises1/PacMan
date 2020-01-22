@@ -5,7 +5,6 @@ import dataStructure.NodeData;
 import dataStructure.edge_data;
 import dataStructure.graph;
 import dataStructure.node_data;
-import gui.Graph_GUI;
 import dataStructure.EdgeData;
 import algorithms.Graph_Algo;
 
@@ -193,7 +192,6 @@ for(node_data n:gg.getV())
 		Graph_Algo g2 = new Graph_Algo();
 
 
-		Graph_GUI graph;
 		NodeData d0 = new NodeData(0);
 		NodeData d1 = new NodeData(1);
 		NodeData d2 = new NodeData(2);
