@@ -35,7 +35,7 @@ public class SimpleDB {
 			try {
 				Class.forName("com.mysql.jdbc.Driver");
 				Connection connection = 
-						DriverManager.getConnection(jdbcUrl, jdbcUser, jdbcUserPassword);
+				DriverManager.getConnection(jdbcUrl, jdbcUser, jdbcUserPassword);
 				Statement statement = connection.createStatement();
 				String allCustomersQuery = "SELECT * FROM Logs;";
 				ResultSet resultSet = statement.executeQuery(allCustomersQuery);
@@ -114,4 +114,3 @@ public class SimpleDB {
 			return ans;
 		}
 	}
-		

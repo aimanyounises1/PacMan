@@ -53,7 +53,10 @@ import java.io.IOException;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.Statement;
 import java.util.*;
 import java.util.List;
 import javax.imageio.ImageIO;
@@ -296,20 +299,7 @@ public final class StdDraw  implements ActionListener, MouseListener, MouseMotio
 		frame.setVisible(true);
 	}
 
-	private static JMenuBar createMenuBar() {
-		JMenuBar menuBar = new JMenuBar();
-		JMenu game = new JMenu("Game");
-		menuBar.add(game);
-		JMenuItem add = new JMenuItem("Add Robot");
-		JMenuItem move = new JMenuItem("Move Robot");
-		add.addActionListener(std);
-		move.addActionListener(std);
-		game.add(add);
-		game.add(move);
-		
-		return menuBar;
-	}
-
+	
 	/***************************************************************************
 	 *  User and screen coordinate systems.
 	 ***************************************************************************/
@@ -1484,22 +1474,143 @@ public final class StdDraw  implements ActionListener, MouseListener, MouseMotio
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		// TODO Auto-generated method stub
-		if(arg0.getActionCommand().equals("Add Robot")) {
+		if (arg0.getActionCommand().equals("Add Pacman")) {
 			System.out.println("hi");
-			String s = JOptionPane.showInputDialog(null,"Choose a Vertex");
+			String s = JOptionPane.showInputDialog(null, "Choose a Vertex");
 			System.out.println(s);
 			StdDraw.g.AddRobot(Integer.valueOf(s));
 			StdDraw.g.game.startGame();
-			//StdDraw.g.start();
-		}if(arg0.getActionCommand().equals("Move Robot")) {
-			
+			// StdDraw.g.start();
 		}
-		
-		
-		
-}
+		if (arg0.getActionCommand().equals("Num of games I played")) {
+			this.printLog();
+			JOptionPane.showMessageDialog(null, "The number of Games = " + Integer.valueOf(this.counter));
+
+		}
+		if (arg0.getActionCommand().equals("Best Score")) {
+			this.printLog();
+			String s = JOptionPane.showInputDialog(null, "Enter the level");
+			JOptionPane.showMessageDialog(null, "The best score is = " + this.scores.get(Integer.valueOf(s)));
+
+		}
+		if (arg0.getActionCommand().equals("Show my Level")) {
+			this.printLog();
+			JOptionPane.showMessageDialog(null, "Your level is =" + Integer.valueOf(this.level));
+
+		}
+
+		if (arg0.getActionCommand().equals("My Place in Class")) {
+			String s = JOptionPane.showInputDialog(null, "Enter the level");
+			this.printLog();
+			JOptionPane.showMessageDialog(null, "Your Rank is = " + this.MyPlace[(Integer.valueOf(s))]);
+		}
+	}
+
+	private static JMenuBar createMenuBar() {
+		JMenuBar menuBar = new JMenuBar();
+		JMenu game = new JMenu("Game");
+		menuBar.add(game);
+		JMenuItem add = new JMenuItem("Add Pacman");
+		JMenuItem move = new JMenuItem("Move Pacman");
+		JMenuItem score = new JMenuItem("Best Score");
+		JMenuItem played = new JMenuItem("Num of games I played");
+		JMenuItem level = new JMenuItem("Show my Level");
+		JMenuItem Place = new JMenuItem("My Place in Class");
+		score.addActionListener(std);
+		played.addActionListener(std);
+		add.addActionListener(std);
+		move.addActionListener(std);
+		level.addActionListener(std);
+		Place.addActionListener(std);
+		game.add(add);
+		game.add(move);
+		game.add(level);
+		game.add(played);
+		game.add(score);
+		game.add(Place);
+		return menuBar;
+	}
+
+	public final String jdbcUrl = "jdbc:mysql://db-mysql-ams3-67328-do-user-4468260-0.db.ondigitalocean.com:25060/oop?useUnicode=yes&characterEncoding=UTF-8&useSSL=false";
+	public final String jdbcUser = "student";
+	public final String jdbcUserPassword = "OOP2020student";
+	private int counter = 0;
+	private int score = 0;
+	private int moves = 0;
+	int[] grades = { 145, 450, 0, 720, 0, 570, 0, 0, 0, 510, 0, 1050, 0, 310, 0, 0, 235, 0, 0, 250, 200, 0, 0, 1000 };
+	int[] Moves = { 290, 580, 0, 580, 0, 500, 0, 0, 0, 580, 0, 580, 0, 580, 0, 0, 290, 0, 0, 580, 290, 0, 0, 1140 };
+	private int level;
+	// the key represents the level in hash map
+	HashMap<Integer, Integer> scores = new HashMap<>();
+	// same one the key in the level the second one is the moves associated in this
+	HashMap<Integer, Integer> move = new HashMap<>();
+	private int id = 315533570 ;
+	private int[] MyPlace = new int[24];
+	/**
+	 * @This code is using in action performed function to know what is my level and the score and etc..
+	 */
+
+	public void printLog() {
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+			Connection connection = DriverManager.getConnection(jdbcUrl, jdbcUser, jdbcUserPassword);
+			Statement statement = connection.createStatement();
+			String allCustomersQuery = "SELECT * FROM oop.Logs where userID =" + this.id+ ";";
+			ResultSet resultSet = statement.executeQuery(allCustomersQuery);
+			int counter1 = 0;
+			while (resultSet.next()) {
+				// the number of the games that played
+				counter1++;
+				int id = resultSet.getInt("levelID");
+				if (id > this.level) {
+					this.level = id;
+				}
+				score = resultSet.getInt("score");
+				moves = resultSet.getInt("moves");
+				// save my results
+				// score = grades[id];
+				if (this.move.get(id) != null) {
+					if (this.move.get(id) < this.Moves[id])
+						move.remove(id);
+					move.put(id, moves);
+
+				} else {
+					move.put(id, moves);
+				}
+				if (scores.get(id) != null&&this.move.get(id)<this.Moves[id]) {
+					if (scores.get(id) < score) {
+						scores.remove(id);
+						scores.put(id, score);
+
+					}
+				} else {
+					scores.put(id, score);
+				}
+
+			}
+			Hashtable<Integer, Integer> MyBest = new Hashtable<Integer, Integer>();
+			for (int i = 0; i < 24; i++) {
+				String allCustomersQuery2 = "SELECT * FROM oop.Logs where levelID = " + i + " and score > "
+						+ this.scores.get(i) + " and moves <= " + this.move.get(i) + ";";
+				ResultSet resultSet2 = statement.executeQuery(allCustomersQuery2);
+				while (resultSet2.next()) {
+					MyBest.put(resultSet2.getInt("userID"), resultSet2.getInt("score"));
+				}
+				MyPlace[i] = MyBest.size() + 1;
+				MyBest.clear();
+			}
+			this.counter = counter1;
+			resultSet.close();
+			statement.close();
+			connection.close();
+
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+	}
+
 }
 
-
-//Copyright © 2000–2017, Robert Sedgewick and Kevin Wayne.
-//Last updated: Mon Aug 27 16:43:47 EDT 2018.
+// Copyright © 2000–2017, Robert Sedgewick and Kevin Wayne.
+// Last updated: Mon Aug 27 16:43:47 EDT 2018.
