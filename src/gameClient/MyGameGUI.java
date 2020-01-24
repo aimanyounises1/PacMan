@@ -122,9 +122,12 @@ public class MyGameGUI extends Thread {
 			kml.init(this.game, s);
 			kml.start();
 			this.start();
-			if (!this.game.isRunning()) {
-				game.sendKML("Not used");
-			}
+			 String remark=	readfiletostring();
+                   if(this.game.isRunning()==false)
+                       {
+            	
+             			game.sendKML(remark);
+                       }
 		}
 		/**
 		 * {@code we use this to start the manual game}
